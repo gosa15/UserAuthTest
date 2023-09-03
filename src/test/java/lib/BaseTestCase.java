@@ -2,9 +2,7 @@ package lib;
 
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
-
 import java.util.Map;
-
 import static org.hamcrest.Matchers.hasKey;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
