@@ -14,7 +14,7 @@ public class UserGetTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
     String testEmail;
     String password;
-    Response responseCreateUserAuth;
+    int idUser;
     Response responseGetAuth;
 
     @BeforeEach
@@ -22,25 +22,25 @@ public class UserGetTest extends BaseTestCase {
 
         Map<String, String> userData = DataGenerator.getRegistrationData();
 
+        Response responseCreateUserAuth = apiCoreRequests
+                .makeGetRequest("https://playground.learnqa.ru/api/user/", userData);
+        this.idUser = this.getIntFromJson(responseCreateUserAuth, "id");
+
+        this.testEmail = userData.get("email");
+        this.password = userData.get("password");
         Map<String, String> authData = new HashMap<>();
         authData.put("email", this.testEmail);
         authData.put("password", this.password);
 
-        this.responseCreateUserAuth = apiCoreRequests
-                .makeGetRequest("https://playground.learnqa.ru/api/user/", userData);
-
-        this.testEmail = userData.get("email");
-        this.password = userData.get("password");
         this.responseGetAuth = apiCoreRequests
                 .makeUserLogin("https://playground.learnqa.ru/api/user/login", authData);
 
     }
 
-
     @Test
     public void testGetUserDataNotAuth(){
         Response  responseUserData = apiCoreRequests
-                .GetNotAuthUserData("https://playground.learnqa.ru/api/user/"+this.getIntFromJson(this.responseCreateUserAuth, "id"));
+                .GetNotAuthUserData("https://playground.learnqa.ru/api/user/"+this.idUser);
 
         String[] unexpectedFields = {"id", "email", "firstName", "lastName"};
 
@@ -52,7 +52,7 @@ public class UserGetTest extends BaseTestCase {
     public void testGetUserDetailsAuthAsSameUser(){
 
         Response  responseUserData = apiCoreRequests
-                .GetAuthUserData("https://playground.learnqa.ru/api/user/"+this.getIntFromJson(this.responseCreateUserAuth, "id"),
+                .GetAuthUserData("https://playground.learnqa.ru/api/user/"+this.idUser,
                                      this.getHeader(responseGetAuth, "x-csrf-token"),
                                      this.getCookie(responseGetAuth, "auth_sid"));
 
