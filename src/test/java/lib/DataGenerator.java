@@ -18,6 +18,11 @@ public class DataGenerator {
         return "testUserName"+timestamp;
     }
 
+    public static String getRandomFirstName(){
+        String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date());
+        return "testFirstName"+timestamp;
+    }
+
     public static Map<String,String> getRegistrationData() {
         Map<String, String> data = new HashMap<>();
         data.put("email", DataGenerator.getRandomEmail());
