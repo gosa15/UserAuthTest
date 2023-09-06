@@ -27,6 +27,7 @@ public class UserRegisterTest extends  BaseTestCase{
                 .makeGetRequest(url, userData);
 
         Assertions.assertResponseTextEquals(responseCreateAuth, "Invalid email format");
+
     }
 
     @Test

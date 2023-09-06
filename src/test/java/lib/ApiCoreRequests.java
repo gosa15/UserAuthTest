@@ -44,11 +44,20 @@ public class ApiCoreRequests {
     }
 
     @Step("Выполнение put-запроса изменения данных по id авторизированного пользователя")
-    public Response makeUserEdit(String url, String token, String cookie, Map<String, String> editData){
+    public Response makeAuthUserEdit(String url, String token, String cookie, Map<String, String> editData){
 
         return given()
                 .header(new Header("x-csrf-token",token))
                 .cookie("auth_sid", cookie)
+                .body(editData)
+                .put(url)
+                .andReturn();
+    }
+
+    @Step("Выполнение put-запроса изменения данных по id не авторизированного пользователя")
+    public Response makeNotAuthUserEdit(String url,Map<String, String> editData){
+
+        return given()
                 .body(editData)
                 .put(url)
                 .andReturn();
