@@ -1,4 +1,5 @@
 package tests;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.BaseTestCase;
@@ -10,8 +11,16 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.DisplayName;
+
+@Severity(value = SeverityLevel.CRITICAL)
+@Epic("Авторизация и работа с профилем пользователя")
+@Feature("Регистрация нового пользователя")
+@Owner("Иванов Иван Иванович")
 public class UserRegisterTest extends  BaseTestCase{
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
+    @Story(value = "Неуспешная регистрация пользователя")
+    @Description("Регистрация с некорректным email")
     @Test
     public void testCreateUserWithExistingEmail(){
         String url = "https://playground.learnqa.ru/api/user/";
@@ -29,7 +38,8 @@ public class UserRegisterTest extends  BaseTestCase{
         Assertions.assertResponseTextEquals(responseCreateAuth, "Invalid email format");
 
     }
-
+    @Story(value = "Неуспешная регистрация пользователя")
+    @Description("Регистрация с коротким username")
     @Test
     public void testCreateUserWithShortName(){
         String url = "https://playground.learnqa.ru/api/user/";
@@ -46,7 +56,8 @@ public class UserRegisterTest extends  BaseTestCase{
 
         Assertions.assertResponseTextEquals(responseCreateAuth, "The value of 'username' field is too short");
     }
-
+    @Story(value = "Неуспешная регистрация пользователя")
+    @Description("Регистрация с длинным username >255 символов")
     @Test
     public void testCreateUserWithLongName(){
         String url = "https://playground.learnqa.ru/api/user/";
@@ -63,7 +74,8 @@ public class UserRegisterTest extends  BaseTestCase{
 
         Assertions.assertResponseTextEquals(responseCreateAuth, "The value of 'username' field is too long");
     }
-
+    @Story(value = "Неуспешная регистрация пользователя")
+    @Description("Регистрация пользователя без одного из параметра")
     @ParameterizedTest
     @ValueSource(strings = {"email", "password","username","firstName","lastName"})
     public void testCreateUserWithoutOneParameter(String condition) throws IllegalAccessException {
@@ -130,9 +142,25 @@ public class UserRegisterTest extends  BaseTestCase{
         }
     }
 
+    @Story(value = "Успешная регистрация пользователя")
+    @Description("Успешная регистрация пользователя")
+    @Test
+    public void testCreateUser(){
+        String url = "https://playground.learnqa.ru/api/user/";
 
+        Map<String, String> userData = new HashMap<>();
+        userData.put("email", DataGenerator.getRandomEmail());
+        userData.put("password", "123");
+        userData.put("username", "testName");
+        userData.put("firstName", "testFirstName");
+        userData.put("lastName", "testLastName");
 
+        Response responseCreateAuth = apiCoreRequests
+                .makeGetRequest(url, userData);
 
+        Assertions.assertResponseStatusCode(responseCreateAuth, 200);
+        Assertions.assertJsonHasField(responseCreateAuth, "id");
 
+    }
 
 }

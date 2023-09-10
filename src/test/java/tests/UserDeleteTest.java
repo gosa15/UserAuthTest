@@ -1,20 +1,28 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.DisplayName;
+
+
+@Epic("Авторизация и работа с профилем пользователя")
+@Feature("Удаление профиля пользователя")
+@Severity(value = SeverityLevel.CRITICAL)
+@Owner("Петров Петр Иванович")
 public class UserDeleteTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
-    //Попытка удалить пользователя по ID 2
+    @Story(value = "Неуспешное удаление пользователя")
+    @Description("Попытка удалить пользователя с ид 1, 2, 3, 4 или 5")
+    @Flaky
     @Test
     public void testDeleteTestUser(){
         Map<String, String> authData = new HashMap<>();
@@ -47,7 +55,8 @@ public class UserDeleteTest extends BaseTestCase {
 
     }
 
-    //Удаление авторизированного пользователя
+    @Story(value = "Успешное удаление пользователя")
+    @Description("Удаление авторизированного пользователя")
     @Test
     public void testDeleteAuthUser(){
         //Создание нового пользователя
@@ -86,7 +95,9 @@ public class UserDeleteTest extends BaseTestCase {
 
     }
 
-    //Удаление пользователя, будучи авторизированным под другим пользователем
+    @Story(value = "Неуспешное удаление пользователя")
+    @Description("Удаление пользователя, будучи авторизированным под другим пользователем")
+    @Flaky
     @Test
     public void testDeleteAuthAnotherUser(){
         //Создание нового пользователя
@@ -142,8 +153,6 @@ public class UserDeleteTest extends BaseTestCase {
                         this.getCookie(responseGetAuthSecondUser, "auth_sid"));
 
         Assertions.assertResponseStatusCode(responseUserData, 200);
-
-
 
     }
 

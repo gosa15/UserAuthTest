@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
@@ -9,7 +10,13 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 import lib.DataGenerator;
+import org.junit.jupiter.api.DisplayName;
 
+@Severity(value = SeverityLevel.BLOCKER)
+@Epic("Авторизация и работа с профилем пользователя")
+@Feature("Получение профиля пользователя")
+@Owner("Петров Петр Иванович")
+//@Severity("BLOCKER")
 public class UserGetTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
     String testEmail;
@@ -37,6 +44,8 @@ public class UserGetTest extends BaseTestCase {
 
     }
 
+    @Story(value = "Неуспешное получение данных пользователя")
+    @Description("Запрос данных не авторизированного пользователя")
     @Test
     public void testGetUserDataNotAuth(){
         Response  responseUserData = apiCoreRequests
@@ -48,6 +57,8 @@ public class UserGetTest extends BaseTestCase {
         Assertions.assertJsonHasNotFields(responseUserData, unexpectedFields);
     }
 
+    @Story(value = "Успешное получение данных пользователя")
+    @Description("Получение данных пользователя")
     @Test
     public void testGetUserDetailsAuthAsSameUser(){
 
@@ -61,6 +72,8 @@ public class UserGetTest extends BaseTestCase {
         Assertions.assertJsonHasFields(responseUserData, expectedFields);
     }
 
+    @Story(value = "Неуспешное получение данных пользователя")
+    @Description("В запросе получения данных пользователя передаются авторизационные данные другого пользователя")
     @Test
     public void testGetUserDetailsAuthAsAnotherUser(){
 

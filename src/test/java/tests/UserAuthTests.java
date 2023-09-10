@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -9,10 +10,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.DisplayName;
+
+
+@Epic("Авторизация и работа с профилем пользователя")
+@Feature("Авторизация")
+@Owner("Иванов Иван Иванович")
+@Severity(value = SeverityLevel.BLOCKER)
 public class UserAuthTests extends BaseTestCase {
     String cookie;
     String header;
@@ -35,6 +42,8 @@ public class UserAuthTests extends BaseTestCase {
         this.userIdOnAuth = this.getIntFromJson(responseGetAuth, "user_id");
     }
 
+    @Story(value = "Успешная авторизация в профиле пользователя")
+    @Description("Успешная авторизация в профиле пользователя: переданы x-csrf-token, auth_sid")
     @Test
     public void testAuthUser() {
         Response responseCheckAuth = RestAssured
@@ -47,6 +56,8 @@ public class UserAuthTests extends BaseTestCase {
         Assertions.assertJsonByName(responseCheckAuth, "user_id", this.userIdOnAuth);
     }
 
+    @Story(value = "Неуспешная авторизация в профиле пользователя")
+    @Description("При передачи не передан один из параметров: x-csrf-token, auth_sid")
     @ParameterizedTest
     @ValueSource(strings = {"cookie", "headers"})
     public void testNegativeAuthUser(String condition) throws IllegalAccessException {

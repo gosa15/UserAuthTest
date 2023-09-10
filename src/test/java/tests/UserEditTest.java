@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
@@ -10,7 +11,13 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.DisplayName;
 
+
+@Epic("Авторизация и работа с профилем пользователя")
+@Feature("Редактирование профиля пользователя")
+@Severity(value = SeverityLevel.CRITICAL)
+@Owner("Петров Петр Иванович")
 public class UserEditTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
@@ -38,7 +45,9 @@ public class UserEditTest extends BaseTestCase {
                 .makeUserLogin("https://playground.learnqa.ru/api/user/login", authData);
 
     }
-    ////Изменение авторизированного пользователя
+
+    @Story(value = "Успешное изменение профиля пользователя")
+    @Description("Изменение авторизированного пользователя")
     @Test
     public void testEditAuthUser(){
         //EDIT
@@ -61,6 +70,8 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseUserData, "firstName", newName);
     }
 
+    @Story(value = "Неуспешное изменение профиля пользователя")
+    @Description("Изменение не авторизированного пользователя")
     //Изменение не авторизированного пользователя
     @Test
     public void testEditNotAuthUser(){
@@ -88,7 +99,9 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByNameNotEql(responseUserData, "firstName", newName);
     }
 
-    //Попытаемся изменить данные пользователя, будучи авторизованными другим пользователем
+    @Story(value = "Неуспешное изменение профиля пользователя")
+    @Description("Изменить данные пользователя, будучи авторизованными другим пользователем")
+    @Flaky
     @Test
     public void testEditAuthAsAnotherUser(){
         //GET запрос данных первого пользователя для сохранения информации до попытки редактирования профиля
@@ -157,7 +170,8 @@ public class UserEditTest extends BaseTestCase {
 
     }
 
-    //Попытаемся изменить email пользователя, будучи авторизованными тем же пользователем, на новый email без символа @
+    @Story(value = "Неуспешное изменение профиля пользователя")
+    @Description("Попытаемся изменить email пользователя на новый без символа @")
     @Test
     public void testEditIncorrectEmailAuthUser(){
         //EDIT
@@ -183,7 +197,8 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseUserData, "email", this.testEmail);
     }
 
-    //Попытаемся изменить firstName пользователя, будучи авторизованными тем же пользователем, на очень короткое значение в один символ
+    @Story(value = "Неуспешное изменение профиля пользователя")
+    @Description("Попытаемся изменить firstName пользователя на очень короткое значение в один символ")
     @Test
     public void testEditShortFirstNameAuthUser(){
         //GET
