@@ -104,7 +104,9 @@ public class UserDeleteTest extends BaseTestCase {
                 .makeUserLogin("https://playground.learnqa.ru/api/user/login", authData);
 
         //Создание второго пользователя
-        Map<String, String> secondUserData = DataGenerator.getRegistrationData();
+        Map<String, String> nonDefaultValuesEmail = new HashMap<>();
+        authData.put("email", "secondUser"+DataGenerator.getRandomEmail());
+        Map<String, String> secondUserData = DataGenerator.getRegistrationData(nonDefaultValuesEmail);
 
         Response responseCreateSecondUser = apiCoreRequests
                 .makeGetRequest("https://playground.learnqa.ru/api/user/", secondUserData);
