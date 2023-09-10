@@ -143,6 +143,7 @@ public class UserDeleteTest extends BaseTestCase {
 
         Assertions.assertResponseStatusCode(responseUserData, 200);
 
+
     }
 
 }
