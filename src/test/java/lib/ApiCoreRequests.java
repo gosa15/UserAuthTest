@@ -63,6 +63,24 @@ public class ApiCoreRequests {
                 .andReturn();
     }
 
+    @Step("Выполнение удаления авторизированного пользователя")
+    public Response makeDeleteAuthUser(String url, String token, String cookie){
+
+        return given()
+                .header(new Header("x-csrf-token",token))
+                .cookie("auth_sid", cookie)
+                .delete(url)
+                .andReturn();
+    }
+
+    @Step("Выполнение удаления по id не авторизированного пользователя")
+    public Response makeDeleteNotAuthUser(String url){
+
+        return given()
+                .put(url)
+                .andReturn();
+    }
+
 
 
 
